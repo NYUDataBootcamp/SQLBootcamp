@@ -9,12 +9,12 @@ import xlrd as xl
 con = sqlite3.connect("sql_sample_db.sqlite")
 
 # create pandas dataframes from each .csv file:
-sales_table = pd.read_csv('https://raw.githubusercontent.com/DaveBackus/Data_Bootcamp/master/Code/SQL/sales_table.csv')
-car_table = pd.read_csv('https://raw.githubusercontent.com/DaveBackus/Data_Bootcamp/master/Code/SQL/car_table.csv')
-salesman_table = pd.read_csv('https://raw.githubusercontent.com/DaveBackus/Data_Bootcamp/master/Code/SQL/salesman_table.csv')
-cust_table = pd.read_csv('https://raw.githubusercontent.com/DaveBackus/Data_Bootcamp/master/Code/SQL/cust_table.csv')
-dog_table = pd.read_csv('https://raw.githubusercontent.com/DaveBackus/Data_Bootcamp/master/Code/SQL/dog_table.csv')
-cat_table = pd.read_csv('https://raw.githubusercontent.com/DaveBackus/Data_Bootcamp/master/Code/SQL/cat_table.csv')
+sales_table = pd.read_csv('https://github.com/NYUDataBootcamp/SQLBootcamp/blob/master/data/sales_table.csv')
+car_table = pd.read_csv('https://github.com/NYUDataBootcamp/SQLBootcamp/blob/master/data/car_table.csv')
+salesman_table = pd.read_csv('https://github.com/NYUDataBootcamp/SQLBootcamp/blob/master/data/salesman_table.csv')
+cust_table = pd.read_csv('https://github.com/NYUDataBootcamp/SQLBootcamp/blob/master/data/cust_table.csv')
+dog_table = pd.read_csv('https://github.com/NYUDataBootcamp/SQLBootcamp/blob/master/data/dog_table.csv')
+cat_table = pd.read_csv('https://github.com/NYUDataBootcamp/SQLBootcamp/blob/master/data/cat_table.csv')
 
 #%%
 # make a list of the tables (dataframes) and table names:
@@ -28,7 +28,7 @@ for i in range(len(tables)):
     table = tables[i]
     con.execute("DROP TABLE IF EXISTS {}".format(table_name))
     pd.io.sql.to_sql(table, "{}".format(table_name), con, index=False)
-    
+
 # Function to make it easy to run queries on this mini-database
 def run(query):
     results = pd.read_sql("{}".format(query), con).fillna(' ')
@@ -39,7 +39,7 @@ rdbms_differences = pd.DataFrame()
 
 # show describe options
 describe_index = ['Reading a table']
-describe_differences = pd.DataFrame({'SQLite' : pd.Series(['PRAGMA TABLE_INFO(table_name)'], index=describe_index), 
+describe_differences = pd.DataFrame({'SQLite' : pd.Series(['PRAGMA TABLE_INFO(table_name)'], index=describe_index),
 							'MySQL' : pd.Series(['DESCRIBE table_name'], index=describe_index),
 							'Microsoft SQL Server' : pd.Series(['SP_HELP table_name'], index=describe_index),
 							'Oracle' : pd.Series(['DESCRIBE table_table'], index=describe_index)})
@@ -51,32 +51,32 @@ limit_differences = pd.DataFrame({'SQLite' : pd.Series(['LIMIT N'], index=limit_
                         'MySQL' : pd.Series(['LIMIT N'], index=limit_df_index),
                         'Microsoft SQL Server' : pd.Series(['SELECT TOP N column_a...'], index=limit_df_index),
                         'Oracle' : pd.Series(['WHERE ROWNUM <=N'], index=limit_df_index)})
-rdbms_differences = rdbms_differences.append(limit_differences)  
+rdbms_differences = rdbms_differences.append(limit_differences)
 
-# show compatibility with joins and different DBs 
+# show compatibility with joins and different DBs
 join_df_index = ['JOIN or INNER JOIN', 'LEFT JOIN or LEFT OUTER JOIN', 'RIGHT JOIN or RIGHT OUTER JOIN', 'OUTER JOIN or FULL OUTER JOIN']
 join_differences = pd.DataFrame({'SQLite' : pd.Series(['✓', '✓', 'not supported', 'not supported'], index=join_df_index),
                         'MySQL' : pd.Series(['✓', '✓', '✓', 'not supported'], index=join_df_index),
                         'Microsoft SQL Server' : pd.Series(['✓','✓','✓','✓'], index=join_df_index),
                         'Oracle' : pd.Series(['✓','✓','✓','✓'], index=join_df_index)})
-rdbms_differences = rdbms_differences.append(join_differences)                     
+rdbms_differences = rdbms_differences.append(join_differences)
 
-# show concat options: 
+# show concat options:
 concat_df_index = ['Concatenating']
 concat_differences = pd.DataFrame({'SQLite' : pd.Series(['||'], index=concat_df_index),
                         'MySQL' : pd.Series(['CONCAT(column_a, column_b)'], index=concat_df_index),
                         'Microsoft SQL Server' : pd.Series(['CONCAT(column_a, column_b) or +'], index=concat_df_index),
                         'Oracle' : pd.Series(['CONCAT(column_a, column_b) or ||'], index=concat_df_index)})
-rdbms_differences = rdbms_differences.append(concat_differences)   
+rdbms_differences = rdbms_differences.append(concat_differences)
 
 
-# show options for IF and CASE WHEN statements                        
+# show options for IF and CASE WHEN statements
 conditional_df_index = ['IF', 'CASE WHEN']
 conditional_differences = pd.DataFrame({'SQLite' : pd.Series(['not supported', '✓'], index=conditional_df_index),
                         'MySQL' : pd.Series(['IF(condition, value_if_true, value_if_false)', '✓'], index=conditional_df_index),
                         'Microsoft SQL Server' : pd.Series(['IF condition PRINT value_if_true...','✓'], index=conditional_df_index),
                         'Oracle' : pd.Series(['IF condition THEN value_if_true ELSIF...END IF','✓'], index=conditional_df_index)})
-rdbms_differences = rdbms_differences.append(conditional_differences)                                            
+rdbms_differences = rdbms_differences.append(conditional_differences)
 
 
 rollup_df_index = ['ROLLUP']
@@ -84,7 +84,7 @@ rollup_differences = pd.DataFrame({'SQLite' : pd.Series(['not supported'], index
                         'MySQL' : pd.Series(['GROUP BY column_a WITH ROLLUP'], index=rollup_df_index),
                         'Microsoft SQL Server' : pd.Series(['GROUP BY column_a WITH ROLLUP'], index=rollup_df_index),
                         'Oracle' : pd.Series(['GROUP BY ROLLUP (column_a)'], index=rollup_df_index)})
-rdbms_differences = rdbms_differences.append(rollup_differences)                                            
+rdbms_differences = rdbms_differences.append(rollup_differences)
 
 
 # Below are all the cheats to the challenges
@@ -92,22 +92,22 @@ rdbms_differences = rdbms_differences.append(rollup_differences)
 describe_cheat = '''PRAGMA TABLE_INFO(car_table)'''
 
 select_cheat1 = '''
-    SELECT 
+    SELECT
         *
-    FROM 
+    FROM
         car_table
     '''
 
 select_cheat2 = '''
     SELECT
-        model_id, 
+        model_id,
         model
     FROM
         car_table
 '''
 
 select_cheat3 = '''
-    SELECT 
+    SELECT
         DISTINCT salesman_id
     FROM
         sales_table
@@ -120,7 +120,7 @@ where_cheat1 = '''
         sales_table
     WHERE
         payment_type != 'cash'
-        AND model_id IN (31,36)     
+        AND model_id IN (31,36)
     '''
 
 where_cheat2 = '''
@@ -133,7 +133,7 @@ where_cheat2 = '''
     '''
 
 where_cheat3 = '''
-    SELECT 
+    SELECT
         *
     FROM
         car_table
@@ -188,9 +188,9 @@ join_cheat3 = '''
     FROM
         sales_table
         JOIN cust_table on sales_table.customer_id = cust_table.customer_id
-    
+
     **OR**
-    
+
     SELECT
         cust_table.customer_id,
         gender,
@@ -218,15 +218,15 @@ join_cheat5 = '''
         JOIN salesman_table AS SM ON S.salesman_id = SM.id
     '''
 
-inner_join_cheat = '''    
+inner_join_cheat = '''
 	SELECT
         *
     FROM
         Dog_Table D
         JOIN Cat_Table C ON D.Owner_Name = C.Owner_Name
-    
+
     -- OR, to make it cleaner --
-    
+
     SELECT
     	D.Owner_Name, Dog_Name, Cat_Name
     FROM
@@ -240,9 +240,9 @@ left_join_cheat = '''
     FROM
         Dog_Table D
         LEFT JOIN Cat_Table C ON D.Owner_Name = C.Owner_Name
-	
+
 	-- OR, to make it cleaner --
-	
+
 	SELECT
     	C.Owner_Name, Cat_Name, Dog_Name
     FROM
@@ -253,16 +253,16 @@ left_join_cheat = '''
 operator_cheat = '''
     SELECT
         S.id,
-        C.model, 
+        C.model,
         S.revenue,
         C.cogs,
         (S.revenue - C.cogs)/(C.cogs) AS gross_profit
     FROM
-        sales_table S 
+        sales_table S
         JOIN car_table C on S.model_id = C.model_id
-    LIMIT 5 
+    LIMIT 5
 	'''
-	
+
 concat_cheat = '''
 	SELECT
         model|| ' (' || make || ')' AS 'Model (Make)'
@@ -271,20 +271,20 @@ concat_cheat = '''
     '''
 
 avg_cheat = '''
-    SELECT 
+    SELECT
         ROUND(AVG(cogs), 2) AS AVG_COGS
     FROM
         car_table
     '''
 count_cheat = '''
-	SELECT 
+	SELECT
         COUNT(*) cars
     FROM
         car_table
-    
+
     --bonus points (run separately)--
-    
-        SELECT 
+
+        SELECT
        COUNT(*) Subarus
     FROM
         car_table
@@ -296,7 +296,7 @@ avg_cheat2 = '''
     SELECT
         AVG(C.sticker_price - S.revenue) AS Avg_Difference
     FROM
-        sales_table S 
+        sales_table S
         JOIN car_table C on C.model_id = S.model_id
         JOIN cust_table CUST on CUST.customer_id = S.customer_id
     WHERE
@@ -311,7 +311,7 @@ concat_cheat = '''
     '''
 
 group_cheat = '''
-    SELECT 
+    SELECT
         C.make,
         AVG(S.revenue - C.cogs)
     FROM
@@ -319,10 +319,10 @@ group_cheat = '''
         JOIN car_table C on S.model_id = C.model_id
     GROUP BY
         C.make
-    
+
     --bonus points--
-    
-    SELECT 
+
+    SELECT
         C.make as Car_Maker,
         ROUND(AVG(S.revenue - C.cogs), 2) AS Avg_Gross_Profit
     FROM
@@ -335,9 +335,9 @@ group_cheat = '''
         Car_Maker
     ORDER BY
         Avg_Gross_Profit DESC
-        
+
     --solutions to WHERE problem--
-    
+
     SELECT
     	SM.first_name as Salesman,
         C.make as Car_Maker,
@@ -354,8 +354,8 @@ group_cheat = '''
         Avg_Gross_Profit DESC
     '''
 
-group_cheat1 = '''    
-	SELECT 
+group_cheat1 = '''
+	SELECT
         make as Maker,
         GROUP_CONCAT(model) as Car_Models
     FROM
@@ -367,7 +367,7 @@ group_cheat1 = '''
 group_cheat2 = '''
 	SELECT
 		SM.first_name || ' ' || SM.last_name AS Salesperson,
-        CUST.gender AS Gender, 
+        CUST.gender AS Gender,
         SUM(S.revenue) AS Total_Revenue,
         COUNT(S.id) AS Cars_Sold
     FROM
@@ -403,9 +403,9 @@ having_where_cheat = '''
     GROUP BY
         Salesperson HAVING Avg_Revenue > 20000
     '''
-    
+
 case_cheat = '''
-    SELECT 
+    SELECT
         C.model as Car_Model,
         SUM(CASE WHEN CUST.gender = 'female' THEN S.revenue END) Female_Customer_Revenue,
         SUM(CASE WHEN CUST.gender = 'male' THEN S.revenue END) Male_Customer_Revenue
@@ -431,9 +431,9 @@ case_cheat2 = '''
         cust_table
     GROUP BY
         Age_Group
-    
+
     --bonus points--
-    
+
     SELECT
         CASE WHEN age BETWEEN 18 AND 24 THEN '18-24 years'
              WHEN age BETWEEN 25 AND 34 THEN '25-34 years'
@@ -448,20 +448,20 @@ case_cheat2 = '''
     GROUP BY
         Age_Group
     '''
-    
+
 nest_cheat1 = '''
 	SELECT
         model AS Car_Model,
-        cogs AS COGs, 
+        cogs AS COGs,
         (SELECT AVG(cogs) from car_table) AS Average_COGs
     FROM
         car_table
-        
+
     --bonus points--
-    
+
     SELECT
         model AS Car_Model,
-        cogs AS COGs, 
+        cogs AS COGs,
         (SELECT AVG(cogs) from car_table) AS Average_COGs,
         cogs - (SELECT AVG(cogs) from car_table) AS Difference
     FROM
@@ -471,7 +471,7 @@ nest_cheat1 = '''
 nest_cheat2 = '''
 	SELECT
         SUM(revenue) as Female_Revenue
-    FROM 
+    FROM
         sales_table
     WHERE
         customer_id in (SELECT customer_id FROM cust_table WHERE gender = 'female')
@@ -479,13 +479,13 @@ nest_cheat2 = '''
 
 union_cheat1 = '''
     SELECT
-        model, 
+        model,
         cogs
-    FROM 
+    FROM
         car_table
-    
+
     UNION ALL
-    
+
     SELECT
         'Combined_Average',
         ROUND(AVG(cogs), 2)
